@@ -1,8 +1,10 @@
 import mongoose from "mongoose";
 
+const db = process.env.MONGODB
+
 function dbConfig(){
-    mongoose.connect('mongodb://127.0.0.1:27017/olxClone').then(result => {
-        console.log("db Connected");
+    mongoose.connect(db).then(result => {
+        console.log(`db Connected on ${db}`);
     }).catch((err) => {
         console.log('yes here',err);
     })
