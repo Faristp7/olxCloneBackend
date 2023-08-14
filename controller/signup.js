@@ -35,7 +35,7 @@ export async function login(req, res) {
           maxAge: 3600000, //1hour
           sameSite: "none",
         });
-        res.json({ message: true });
+        res.json({ data: true });
       } else {
         res.send(false);
       }
@@ -44,8 +44,30 @@ export async function login(req, res) {
     console.log(error);
   }
 }
+
+export async function logout(req, res) {
+  try {
+    // Clear the 'token' cookie by setting an expired date
+    res.cookie('jwtToken', '', {
+      httpOnly: true,
+      expires: new Date(0),
+      secure: true,  // Make sure this is set to true for HTTPS
+      sameSite: 'None',  // SameSite setting for secure cross-site cookies
+    });
+
+    // Send a JSON response indicating successful logout
+    res.json(false);
+  } catch (error) {
+    console.error('Error during logout:', error);
+    // Send an error response if something goes wrong
+    res.status(500).json({ success: false, error: 'Logout failed' });
+  }
+}
+
+
 export const checkUserLoggedIn = async (req, res) => {
   try {
+    console.log('enter');
     const token = req.cookies.jwtToken;
     if (!token)
       return res.json({ loggedIn: false, error: true, message: "no token" });
